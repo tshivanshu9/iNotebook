@@ -63,13 +63,29 @@ router.put('/:id', fetchuser, [
     try {
         let note = await Notes.findById(req.params.id);
         if (!note) {
-            return res.status(404).send("Not Found");
+            return res.status(400).send("Not Found");
         }
         if (note.userId.toString() !== req.user.id) {
             return res.status(401).send("Not Allowed");
         }
         note = await Notes.findByIdAndUpdate(req.params.id, { $set: newNote }, { new: true });
         res.json(note);
+    } catch (error) {
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+/**
+ * @DELETE_A_NOTE_FOR_LOGGED_IN_USER
+ */
+router.delete('/:id', fetchuser, async (req, res) => {
+    try {
+        const note = await Notes.findById(req.params.id);
+        if (!note || note.userId.toString() !== req.user.id) {
+            return res.status(400).send("Not Found");
+        }
+        await Notes.findByIdAndDelete(req.params.id);
+        res.json({ "Success": "Note has been deleted"});
     } catch (error) {
         res.status(500).send("Internal Server Error");
     }
