@@ -10,7 +10,7 @@ const NoteState = (props) => {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjg2OTY5ZjI3MDgwNzFmOTNlMDc1ZTg0In0sImlhdCI6MTc1MTgyODk4NH0.F84TuV2pMmEdii7sr97n3KW9ltWzjPRSub14sOICG64',
+        'auth-token': process.env.REACT_APP_MOCK_TOKEN,
       },
     });
     const data = await response?.json();
@@ -28,7 +28,7 @@ const NoteState = (props) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjg2OTY5ZjI3MDgwNzFmOTNlMDc1ZTg0In0sImlhdCI6MTc1MTgyODk4NH0.F84TuV2pMmEdii7sr97n3KW9ltWzjPRSub14sOICG64',
+        'auth-token': process.env.REACT_APP_MOCK_TOKEN,
       },
       body: JSON.stringify(newNote),
     });
@@ -56,7 +56,7 @@ const NoteState = (props) => {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjg2OTY5ZjI3MDgwNzFmOTNlMDc1ZTg0In0sImlhdCI6MTc1MTgyODk4NH0.F84TuV2pMmEdii7sr97n3KW9ltWzjPRSub14sOICG64',
+        'auth-token': process.env.REACT_APP_MOCK_TOKEN,
       },
       body: JSON.stringify(updatedNote),
     });
