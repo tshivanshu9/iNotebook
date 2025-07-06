@@ -2,7 +2,7 @@ import noteContext from './noteContext';
 import React from 'react';
 
 const NoteState = (props) => {
-  const apiHost = 'http://localhost:4000/api/notes';
+  const apiHost = process.env.REACT_APP_NOTES_API_URL;
   const [notes, setNotes] = React.useState([]);
 
   const fetchAllNotes = async () => {
