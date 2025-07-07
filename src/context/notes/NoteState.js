@@ -63,10 +63,17 @@ const NoteState = (props) => {
     return response?.json();
   };
 
-  const deleteNote = (id) => {
+  const deleteNote = async (id) => {
     console.log("Deleting note with id: " + id);
     const newNotes = notes.filter((note) => note._id !== id );
     setNotes(newNotes);
+    await fetch(`${apiHost}/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'auth-token': process.env.REACT_APP_MOCK_TOKEN,
+      },
+    });
   };
 
   return (
