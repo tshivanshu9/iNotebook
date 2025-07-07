@@ -39,9 +39,9 @@ router.post('/create-user', [
             }
         };
         const token = jwt.sign(data, JWT_SECRET);
-        res.json({ token });
+        res.json({ sucess: true, data: { token } });
     } catch (err) {
-        res.status(500).send("Internal Server Error");
+        res.status(500).send({success: false, error: "Internal Server Error"});
     }
 });
 
@@ -60,11 +60,11 @@ router.post('/login', [
     try {
         const user = await User.findOne({ email });
     if (!user) {
-        return res.status(400).json({ error: "Either of email or password are incorrect" });
+        return res.status(400).json({ success: false, error: "Either of email or password are incorrect" });
     }
     const passwordCompare = await bcrypt.compare(password, user.password);
     if (!passwordCompare) {
-        return res.status(400).json({ error: "Either of email or password are incorrect" });
+        return res.status(400).json({ success: false, error: "Either of email or password are incorrect" });
     }
     const data = {
         user: {
@@ -72,9 +72,9 @@ router.post('/login', [
         }
     };
     const token = jwt.sign(data, JWT_SECRET);
-    res.json({ token });
+    res.json({ success: true, data: { token } });
     } catch (error) {
-        res.status(500).send("Internal Server Error");
+        res.status(500).send({success: false, error: "Internal Server Error"});
     }
 });
 
@@ -87,9 +87,9 @@ router.get('/getuser', fetchuser, async (req, res) => {
     try {
         const userId = req.user && req.user.id;
         const user = await User.findById(userId).select("-password");
-        res.json(user);
+        res.json({ success: true, data: user });
     } catch (error) {
-        res.status(500).send("Internal Server Error");
+        res.status(500).send({success: false, error: "Internal Server Error"});
     }
 });
 

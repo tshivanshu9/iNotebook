@@ -13,7 +13,7 @@ const NoteState = (props) => {
         'auth-token': process.env.REACT_APP_MOCK_TOKEN,
       },
     });
-    const data = await response?.json();
+    const data = (await response?.json())?.data;
     setNotes(data);
   };
 
@@ -32,7 +32,7 @@ const NoteState = (props) => {
       },
       body: JSON.stringify(newNote),
     });
-    return response?.json();
+    return (await response?.json())?.data;
   };
 
   const editNote = async (id, newTitle, newDescription, newTag) => {
@@ -60,7 +60,7 @@ const NoteState = (props) => {
       },
       body: JSON.stringify(updatedNote),
     });
-    return response?.json();
+    return (await response?.json())?.data;
   };
 
   const deleteNote = async (id) => {
