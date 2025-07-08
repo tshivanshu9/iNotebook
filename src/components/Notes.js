@@ -3,7 +3,8 @@ import noteContext from '../context/notes/noteContext';
 import Noteitem from './Noteitem';
 import AddNote from './AddNote';
 
-const Notes = () => {
+const Notes = (props) => {
+  const { showAlert } = props;
   const context = useContext(noteContext);
   const { notes, fetchAllNotes, editNote } = context;
   const [note, setNote] = useState({ id: "", etitle: "", edescription: "", etag: "" });
@@ -15,6 +16,7 @@ const Notes = () => {
   const refClose = useRef(null);
 
   const updateNote = (currentNote) => {
+    console.log("🚀 ~ updateNote ~ currentNote:", currentNote)
     ref.current.click();
     setNote({ etitle: currentNote.title, edescription: currentNote.description, etag: currentNote.tag, id: currentNote._id });
   };

@@ -10,10 +10,11 @@ const NoteState = (props) => {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'auth-token': process.env.REACT_APP_MOCK_TOKEN,
+        'auth-token': localStorage.getItem('token'),
       },
     });
     const data = (await response?.json())?.data;
+    console.log("🚀 ~ fetchAllNotes ~ data:", data)
     setNotes(data);
   };
 
@@ -23,16 +24,26 @@ const NoteState = (props) => {
       description,
       ...(newTag && { tag: newTag }),
     }
-    setNotes(notes.concat(newNote));
-    const response = await fetch(apiHost, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'auth-token': process.env.REACT_APP_MOCK_TOKEN,
-      },
-      body: JSON.stringify(newNote),
-    });
-    return (await response?.json())?.data;
+    try {
+      const response = await fetch(apiHost, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'auth-token': localStorage.getItem('token'),
+        },
+        body: JSON.stringify(newNote),
+      });
+      const finalResponse = await response?.json();
+      if (finalResponse?.success) {
+        setNotes(notes.concat(newNote));
+        props.showAlert('Note added successfully', 'success');
+        return finalResponse?.data;
+      } else {
+        props.showAlert('Failed to add note', 'danger');
+      }
+    } catch (error) {
+      props.showAlert('Failed to add note', 'danger');
+    }
   };
 
   const editNote = async (id, newTitle, newDescription, newTag) => {
@@ -51,29 +62,50 @@ const NoteState = (props) => {
       }
       return note;
     });
-    setNotes(updatedNotes);
-    const response = await fetch(`${apiHost}/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'auth-token': process.env.REACT_APP_MOCK_TOKEN,
-      },
-      body: JSON.stringify(updatedNote),
-    });
-    return (await response?.json())?.data;
+    try {
+      const response = await fetch(`${apiHost}/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'auth-token': localStorage.getItem('token'),
+        },
+        body: JSON.stringify(updatedNote),
+      });
+      const finalResponse = await response?.json();
+      console.log("🚀 ~ editNote ~ finalResponse:", finalResponse)
+      if (finalResponse?.success) {
+        setNotes(updatedNotes);
+        props.showAlert('Note updated successfully', 'success');
+        return finalResponse?.data;
+      } else {
+        props.showAlert('Failed to update note', 'danger');
+      }
+    } catch (error) {
+      props.showAlert('Failed to update note', 'danger');
+    }
   };
 
   const deleteNote = async (id) => {
     console.log("Deleting note with id: " + id);
     const newNotes = notes.filter((note) => note._id !== id );
-    setNotes(newNotes);
-    await fetch(`${apiHost}/${id}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        'auth-token': process.env.REACT_APP_MOCK_TOKEN,
-      },
-    });
+    try {
+      const res = await fetch(`${apiHost}/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'auth-token': localStorage.getItem('token'),
+        },
+      });
+      const finalResponse = await res?.json();
+      if (finalResponse?.success) {
+        setNotes(newNotes);
+        props.showAlert('Note deleted successfully', 'success');
+      } else {
+        props.showAlert('Failed to delete note', 'danger');
+      }
+    } catch (error) {
+      props.showAlert('Failed to delete note', 'danger');
+    }
   };
 
   return (

@@ -69,8 +69,9 @@ router.put('/:id', fetchuser, [
             return res.status(401).send("Not Allowed");
         }
         note = await Notes.findByIdAndUpdate(req.params.id, { $set: newNote }, { new: true });
-        res.json({ sucess: true, data: note });
+        res.json({ success: true, data: note });
     } catch (error) {
+        console.log("🚀 ~ ], ~ error:", error)
         res.status(500).send({success: false, error: "Internal Server Error"});
     }
 });
@@ -85,7 +86,7 @@ router.delete('/:id', fetchuser, async (req, res) => {
             return res.status(400).send("Not Found");
         }
         await Notes.findByIdAndDelete(req.params.id);
-        res.json({ sucess: true, data: "Note has been deleted" });
+        res.json({ success: true, data: "Note has been deleted" });
     } catch (error) {
         res.status(500).send({success: false, error: "Internal Server Error"});
     }
